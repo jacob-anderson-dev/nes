@@ -5,6 +5,10 @@ set(CMAKE_GENERATOR "Ninja" CACHE INTERNAL "" FORCE)
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
+# enable_testing()
+# add_subdirectory(src)
+# add_subdirectory(tests)
+
 if(APPLE)
     set(CMAKE_CXX_COMPILER "/usr/bin/clang++")
 endif()

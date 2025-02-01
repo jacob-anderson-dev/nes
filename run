@@ -1,0 +1,14 @@
+#!/usr/bin/env bash
+
+set -e
+
+if [ "$(basename "$PWD")" = "build" ]; then
+    cd ..
+fi
+
+rm -rf ./build/
+mkdir build
+cd build
+cmake -Wno-dev -G Ninja .. &> /dev/null
+ninja --quiet &> /dev/null
+./nes

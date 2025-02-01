@@ -1,0 +1,15 @@
+git checkout -b feature/add-new-logging
+# Make changes
+git commit -m "Add logging functionality"
+git push --set-upstream origin feature/add-new-logging
+
+// Day to day:
+git pull origin dev
+git checkout -b bugfix/fix-segfault
+
+// Work incrementally, committing small logical chunks so others can follow your progress:
+git commit -m "Fix null pointer in X logic"
+git push origin bugfix/fix-segfault
+
+// Open a Pull Request and request review from senior engineers or peers.
+// Respond to any feedback with additional commits.
