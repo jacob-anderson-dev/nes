@@ -1,0 +1,10 @@
+build/
+*.o
+*.obj
+*.log
+*.pdb
+*.exe
+*.dll
+*.so
+*.swp
+.DS_Store

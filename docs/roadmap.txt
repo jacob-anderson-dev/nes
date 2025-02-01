@@ -1,0 +1,168 @@
+6502 {
+    // register reset values
+        byte reset_accumulator
+        byte reset_x_index
+        byte reset_y_index
+        byte reset_stack_pointer
+        byte reset_status
+
+	// registers
+        byte accumulator
+        byte x_index
+        byte y_index
+
+    byte stack_pointer
+	word program_counter
+	byte status_register
+
+	typedef none (6502.code_execute)(word)
+	typedef word (6502.address_execute)()
+
+	struct instruction
+	{
+		address_execute address
+		code_execute code
+		byte cycles
+	}
+
+	static instruction instruction_table[256]
+	none execute(instruction i)
+	bool illegal_opcode
+
+	// addressing modes
+        word address_accumulator()
+        word address_immediate()
+        word address_absolute()
+        word address_zero_page()
+        word address_indexed_x_zero_page()
+        word address_indexed_y_zero_page()
+        word address_indexed_x_absolute()
+        word address_indexed_y_absolute()
+        word address_implied()
+        word address_relative()
+        word address_indexed_x_indirect()
+        word address_indexed_y_indirect()
+        word address_absolute_indirect()
+
+	// opcodes (grouped as per datasheet)
+        none Op_ADC(word src)
+        none Op_AND(word src)
+        none Op_ASL(word src) 	none Op_ASL_ACC(word src)
+        none Op_BCC(word src)
+        none Op_BCS(word src)
+
+        none Op_BEQ(word src)
+        none Op_BIT(word src)
+        none Op_BMI(word src)
+        none Op_BNE(word src)
+        none Op_BPL(word src)
+
+        none Op_BRK(word src)
+        none Op_BVC(word src)
+        none Op_BVS(word src)
+        none Op_CLC(word src)
+        none Op_CLD(word src)
+
+        none Op_CLI(word src)
+        none Op_CLV(word src)
+        none Op_CMP(word src)
+        none Op_CPX(word src)
+        none Op_CPY(word src)
+
+        none Op_DEC(word src)
+        none Op_DEX(word src)
+        none Op_DEY(word src)
+        none Op_EOR(word src)
+        none Op_INc(word src)
+
+        none Op_INX(word src)
+        none Op_INY(word src)
+        none Op_JMP(word src)
+        none Op_JSR(word src)
+        none Op_LDA(word src)
+
+        none Op_LDX(word src)
+        none Op_LDY(word src)
+        none Op_LSR(word src) 	none Op_LSR_ACC(word src)
+        none Op_NOP(word src)
+        none Op_ORA(word src)
+
+        none Op_PHA(word src)
+        none Op_PHP(word src)
+        none Op_PLA(word src)
+        none Op_PLP(word src)
+        none Op_ROL(word src) 	none Op_ROL_ACC(word src)
+
+        none Op_ROR(word src)	none Op_ROR_ACC(word src)
+        none Op_RTI(word src)
+        none Op_RTS(word src)
+        none Op_SBC(word src)
+        none Op_SEC(word src)
+        none Op_SED(word src)
+
+        none Op_SEI(word src)
+        none Op_STA(word src)
+        none Op_STX(word src)
+        none Op_STY(word src)
+        none Op_TAX(word src)
+
+        none Op_TAY(word src)
+        none Op_TSX(word src)
+        none Op_TXA(word src)
+        none Op_TXS(word src)
+        none Op_TYA(word src)
+
+        none Op_ILLEGAL(word src)
+
+	// IRQ, reset, NMI vectors
+        static const word irqVectorH = 0xFFFF
+        static const word irqVectorL = 0xFFFE
+        static const word rstVectorH = 0xFFFD
+        static const word rstVectorL = 0xFFFC
+        static const word nmiVectorH = 0xFFFB
+        static const word nmiVectorL = 0xFFFA
+
+
+	// read/write/clock-cycle callbacks
+        typedef none (bus_write)(word, byte)
+        typedef byte (bus_read)(word)
+        typedef none (clock_cycle)(6502)
+        bus_read read
+        bus_write write
+        clock_cycle cycle
+
+	// stack operations
+	inline none StackPush(byte byte)
+	inline byte StackPop()
+
+public:
+	enum cycle_method {
+		INST_COUNT,
+		CYCLE_COUNT,
+	}
+	6502(bus_read r, bus_write w, clock_cycle c = nullptr)
+	none NMI()
+	none IRQ()
+	none Reset()
+	none Run(
+		double_word cycles,
+		quad_word cycle_count,
+		cycle_method cycle_method = cycle_count)
+	none RunEternally() // Until illegal_opcode
+    word GetPc()
+    byte GetS()
+    byte GetP()
+    byte GetA()
+    byte GetX()
+    byte GetY()
+    none SetResetS(byte value)
+    none SetResetP(byte value)
+    none SetResetA(byte value)
+    none SetResetX(byte value)
+    none SetResetY(byte value)
+    byte GetResetS()
+    byte GetResetP()
+    byte GetResetA()
+    byte GetResetX()
+    byte GetResetY()
+}
